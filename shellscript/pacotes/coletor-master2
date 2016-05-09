@@ -1,0 +1,56 @@
+
+IPS_CLIENTES=""
+IDS_CLIENTES=""
+PORTAS_CLIENTES=""
+CARGAS=""
+
+
+function buscaIdClientes {
+        echo "SELECT id FROM clientes where ativo = 'S'" > /tmp/id_clientes.sql
+        IDS_CLIENTES=( `mysql -u$USER -p$PWD painel <  /tmp/id_clientes.sql | grep -v id`)
+}
+
+
+function buscaIpClientes {
+        echo "SELECT ip FROM clientes where ativo = 'S'" > /tmp/ip_clientes.sql
+        IPS_CLIENTES=( `mysql -u$USER -p$PWD painel <  /tmp/ip_clientes.sql | grep -v ip`)
+}
+
+
+function buscaPortaClientes {
+        echo "SELECT porta FROM clientes where ativo = 'S'" > /tmp/porta_clientes.sql
+        PORTAS_CLIENTES=( `mysql -u$USER -p$PWD painel <  /tmp/porta_clientes.sql | grep -v porta`)
+}
+
+
+function cargasClientes {
+        DATA_LEITURA="$(date +%Y-%m-%d" "%H:%M:%S)"
+        echo $DATA_LEITURA
+        i=0;
+        for IP in ${IPS_CLIENTES[@]}; do
+                if ping -c 1 $IP >/dev/null; then
+                        LEITURA=`ssh -p${PORTAS_CLIENTES[$i]} coletorpainel@$IP "coletor-cliente"`
+                else
+                        LEITURA=0
+                fi
+                echo "
+                        INSERT INTO painel.leituras (idCliente, data, leitura)
+                        VALUES( '${IDS_CLIENTES[$i]}',
+                                '$DATA_LEITURA',
+                                '$LEITURA')     
+                     " > /tmp/insert_leitura.sql
+                mysql -u$USER -p$PWD < /tmp/insert_leitura.sql
+                let i=$i+1;
+        done
+}
+
+
+function init {
+        buscaIdClientes
+        buscaIpClientes
+        buscaPortaClientes
+        cargasClientes
+}
+
+
+init

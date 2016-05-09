@@ -1,0 +1,168 @@
+<?php
+include_once(SYSTEM_DIR."model/common/id.class.php");
+
+class Persistent {
+ 
+ 	
+	function save($id, $entity) {
+		if($id==0) {
+			return $this->create($entity);
+		} else {
+			$this->update($entity);
+		}		
+	} 
+	
+	function executeQuery($sql){
+		$result = query($sql);
+		return $result;
+	}
+	
+	function load($id, $entity) {		
+		$query = $this->selectQuery($entity->getTableName(), array("id"=>$id));			
+		$result = query($query);
+		$entity->setRecord($this->getRecord($result));
+ 		return(mysql_num_rows($result));
+	}
+	
+	function loadById($id, $entity) {
+		$query = $this->selectQuery($entity->getTableName(), array("id"=>$id));			
+		$result = query($query);
+		$entity->setRecord($this->getRecord($result));
+		return(mysql_num_rows($result));
+	}
+	
+	function loadByAtributte($atributte, $entity, $value) {
+		$query = $this->selectQuery($entity->getTableName(), array($atributte=>$value));			
+		$result = query($query);
+		$entity->setRecord($this->getRecord($result));
+		return(mysql_num_rows($result));
+	}
+
+	function loadByKey($aKeys, $entity) {		
+		$query = $this->selectQuery($entity->getTableName(), $aKeys);			
+		$result = query($query);
+		$entity->setRecord($this->getRecord($result));
+ 		return(mysql_num_rows($result));
+	}
+	
+	
+	function findByKeys($keys, $entity) {
+		$query = $this->selectQuery($entity->getTableName(), $keys);		
+		$result = query($query);
+ 		return($result);
+	}
+		
+	function delete($entity) {		
+		$query = $this->deleteQuery($entity->getTableName(), $this->getEntityKeyArray($entity) );
+		query($query);
+		$query = 'delete from ids '. $this->whereClause($this->getEntityKeyArray($entity));
+		query($query);
+	}
+	
+	private function update($entity) {	
+		id::updateId($entity->getId());
+		$query = $this->updateQuery($entity->getTableName(), $entity->getRecord(), $this->getEntityKeyArray($entity) );
+		query($query);		
+	}
+	
+	private function create($entity) {				
+		if($_SESSION['ESPACO_EXCEDIDO']){
+			echo "excedeu o espaço";
+			die;			
+		}			
+		$id = id::generateId($entity);
+        $entity->setRecordValue("id", $id);	
+ 		$query = $this->insertQuery($entity->getTableName(), $entity->getRecord());
+		query($query);
+		return $id;
+	}
+	
+	private function insertQuery($table, $record) {
+
+ 		$sql  = "insert into `$table` ( `";
+ 		
+		foreach($record as $key => $val) {
+			$sql .= $key . "`,`";	
+		}
+		
+		$sql = substr($sql, 0, -2);
+		$sql .= ") values ( ";
+	
+		foreach($record as $key => $val) {
+			$sql .= quote_smart($val) . "," ;
+			//$sql .= mysql_escape_string($val) . "','" ;
+		}
+		$sql = substr($sql, 0, -1) . ")";
+         
+		//die("<br>query: $sql");
+		return $sql;	
+ 	}
+ 	
+ 	private function deleteQuery($table, $criteria) {
+ 		$sql = "delete from $table" . $this->whereClause($criteria);
+ 		return $sql;	
+ 	}
+ 	
+ 	private function updateQuery($table, $record, $criteria) {
+ 		$sql  = "update `$table` set ";
+
+		foreach($record as $key => $val) {
+			//$val = htmlspecialchars($val);
+			//$sql .= "`$key` = '".$val."', ";
+			$sql .= "`$key` = ".quote_smart($val).", ";	
+		}
+		
+		$sql = substr($sql, 0, -2) . ' '; 
+		$sql .= $this->whereClause($criteria);	
+		//echo $sql;
+		return $sql; 		
+ 	}
+ 	
+ 	private function selectQuery($table, $criteria) {
+ 		$sql = "select * from `$table` ";
+ 		$sql .= $this->whereClause($criteria);
+ 		return $sql;
+ 	}
+ 	
+ 	private function exists($table, $criteria) {
+ 		$result = query("select * from {$table} where $criteria");
+ 		return(mysql_num_rows($result));
+ 	}
+ 	
+ 	private function whereClause($keys) {
+ 		$rslt = " where ";
+ 		foreach($keys as $key => $val) {
+ 			$rslt .= " (`$key` = '$val') and "; 
+ 		}
+		$rslt = substr($rslt, 0, -4);
+ 		return $rslt;
+ 	}
+ 	
+ 	private function limitClause($pageNumber, $rowsPerPage) {
+		$offset = ($pageNumber - 1) * $rowsPerPage;   
+		if(isset($rowsPerPage) && isset($pageNumber)) {
+			return " limit {$offset}, {$rowsPerPage} ";
+		} elseif(isset($rowsPerPage)) {
+			return " limit {$rowsPerPage} ";
+		} else {
+			return "";
+		}
+ 	}
+ 	
+ 	private function getKeyArray($id) {
+ 		return array("id"=>$id);
+ 	}
+ 	
+ 	private function getEntityKeyArray($entity) {
+ 		return array("id"=>$entity->getId());
+ 	}
+
+
+	private function getRecord($result) {
+		$record = mysql_fetch_assoc($result);
+		return $record;
+	}
+	
+}
+	
+?>

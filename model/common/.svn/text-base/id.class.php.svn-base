@@ -1,0 +1,36 @@
+<?php
+
+class Id {
+	
+	private
+		$id;	
+    function Id($id) {
+		$this->id = $id;    	
+    }
+    
+    function getTipo() {
+		$sql = "select * from ids where id='{$this->id}'";
+    	$result = query($sql) or die("3.".mysql_error());
+    	$dados =  mysql_fetch_assoc($result);
+		$tipo = $dados['tipoObjeto'];
+		return $tipo;
+    } 
+    
+    static function generateId($entity){ 		
+ 		$data = date("Y-m-d H:i:s"); 		
+ 		$sqlinsert = "insert into ids (tipoObjeto,data,idProprietario,dataAlteracao) values " .
+ 				"('".$entity->getObjectType()."','".$data."','"
+ 				.$entity->getIdProprietario()."','".$data."')"; 	
+ 		$rst = query($sqlinsert);
+		return mysql_insert_id();
+ 	}
+ 	
+ 	static function updateId($id){ 		
+ 		$data = date("Y-m-d H:i:s"); 		
+ 		$sqlupdate = "update ids set dataAlteracao='".$data."' where id=" .$id; 		
+ 		$result = query($sqlupdate); 		
+ 		return $result; 		
+ 	}
+    
+}
+?>

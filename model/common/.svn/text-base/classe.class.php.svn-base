@@ -1,0 +1,66 @@
+<?php
+
+include_once(SYSTEM_DIR."model/common/persistent.class.php");
+
+class Classe {
+
+    protected $model;
+    protected $persistence;
+	protected $atributos;
+    
+    function __construct() {
+    	$this->persistence = new Persistent();
+    }
+    
+    function grava($id) {
+  		$this->persistence->save($id, $this->model);
+		return $this->model->getId();
+	}
+	
+	function getId() {
+		return $this->model->getId();
+	}
+	
+	function getAttributes() {
+	  return $this->model->getRecord();
+	}
+	
+	function Excluir($id) {
+		$this->model->setRecordValue("id", $id);
+		$this->persistence->delete($this->model);
+	}
+	
+	function obter($id) {		
+		$result = $this->persistence->load($id, $this->model);
+	  	$this->atributos = $this->model->getRecord();
+	  	return $result;
+	}
+
+	function obterPorId($id) {
+		$result = $this->persistence->loadById($id, $this->model);
+	  	$this->atributos = $this->model->getRecord();
+	  	return $result;
+	}
+
+	function obterAtributoPorId($id, $atributo) {
+		if ($this->obter($id)) {
+	  		return $this->obterAtributo($atributo);
+	  	}
+	}
+	
+	function obterPorAtributo($atributo, $valor) {
+		$result = $this->persistence->loadByAtributte($atributo, $this->model, $valor);
+	  	$this->atributos = $this->model->getRecord();
+	  	return $result;
+	}
+
+	function obterAtributos() {
+		return $this->atributos;
+	}
+	
+	function obterAtributo($atributo) {		
+		return $this->atributos[$atributo];	
+	}
+	
+}
+?>

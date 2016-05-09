@@ -1,0 +1,84 @@
+<?php
+
+class Entity {
+	
+	private 
+	  $objectType,
+	  $data,
+	  $idProprietario,
+	  $tableName,
+	  $record = array(),
+	  $fields = array(),
+	  $fieldsInfo = array();
+	 
+	function initRecord(){
+		$this->record = array();
+	}
+		
+	function setObjectType($value){
+		$this->objectType = $value;		
+	}
+	
+	function setData($value){
+		$this->Data = $value;		
+	}
+	
+	function setIdProprietario($value){
+		$this->IdProprietario = $value;		
+	}
+	
+	function setTableName($value){
+		$this->tableName = $value;		
+	}
+	
+	function getId(){
+		return $this->record["id"];		
+	}
+	
+	function getObjectType(){
+		return $this->objectType;		
+	}
+		
+	function getData(){
+		return $this->Data;		
+	}
+	
+	function getIdProprietario(){
+		return $this->idProprietario;
+	}
+	
+	function getTableName(){
+		return $this->tableName;		
+	}
+	
+	function setFields($value){
+		$this->fields = $value;		
+	}
+	
+	function getRecord(){
+		return $this->record;		
+	}
+
+	function setRecord($value){
+		$this->record = $value;		
+	}
+
+	function setRecordValue($key, $value){
+		$this->record[$key] = $value;		
+	}
+	
+	function getRecordValue($key){
+		return $this->record[$key];
+	}
+	
+	function assignFieldValues($data){
+		$this->initRecord();
+		foreach ($this->fields as $field){
+			if (isset($data[$field])){
+				$this->setRecordValue($field,$data[$field]);	
+			}
+		}		
+	}
+}
+
+?>
