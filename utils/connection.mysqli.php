@@ -95,10 +95,7 @@ class ConnectionMysqli {
 	}
 
 	public static function getConnectionSanitize() {
-		$factory = self::getFactory();
-
-		// conexao principal não existe então
-		// cria uma nova apenas para o sanitize
+		$factory = self::getFactory();		
 		if (!$factory->hasConnection()) {
 			if (defined('HOST') && defined('DB')) {
 				return self::getConnection();
