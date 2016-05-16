@@ -28,14 +28,14 @@ function montarGrafico(conf,legendaServer,dadosServer){
 	        padding: { left: 5, top: 5, right: 5, bottom: 5 },
 	        titlePadding: { left: 90, top: 0, right: 0, bottom: 10 },
 	        source: dados,	        
-	        backgroundColor: 'Black',
+	        backgroundColor: 'white',
 	        borderLineColor: 'Black',
 	        enableAnimations: animar,	        
 	        categoryAxis:
 	            {
 	                dataField: 'data',
 	                showGridLines: false,
-	                gridLinesColor: 'White'
+	                gridLinesColor: 'Black'
 	            },
 	        seriesGroups:
 	            [
@@ -64,7 +64,3 @@ function montarGrafico(conf,legendaServer,dadosServer){
 function apenasAtualizarDadosDoGrafico(data) {
 	$('#chartContainer').jqxChart({source: data});	
 }
-
-
-
-

@@ -149,8 +149,8 @@
 .jqx-chart-label-text,
 .jqx-chart-legend-text
 {
-    fill: #FFF;
-    color: #FFF;
+    fill: #000;
+    color: #000;
     font-size: 13px;
     font-family: Helvetica, Arial;
     font-weight: bold;
