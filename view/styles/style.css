@@ -44,63 +44,6 @@ body {
 	background-repeat: repeat-x;
 }
 
-#barraMec {
-	margin-top: 15px;	
-	height:35px;
-	min-width:100%;
-	border-top-right-radius: 20px;
-}
-
-#barra_Mec_esq {
-	float: left;	
-	width: 727px;
-	height: 35px;
-}
-
-#barra_Mec_esq a {
-	float: left;	
-	border: 0 none;
-	height: 27px;
-	margin: 6px 0 0 47px;
-	padding: 0;
-	text-decoration: none;
-	width: 103px;
-}
-
-#barra_Mec_dir {
-	float: right;
-	border: 0 none;
-	height: 29px;
-	margin: 3px 20px 0 5px;
-	text-decoration: none;
-	width: 110px;
-}
-
-#link_portal {
-	float: right;	
-	border: 0 none;
-	height: 29px;
-	margin: 0px 0px 0 5px;
-	text-decoration: none;
-	width: 110px;
-}
-
-#comandos {
-	float: right;
-	margin: -25px 150px 0px 0px;
-	color: white;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-	text-align: right;
-}
-
-#comandos  a {
-	color: white;
-	text-decoration: none;
-	font-family: Verdana;
-	font-size: 12px;
-}
 
 #conteudo {
 	float: left;
@@ -214,27 +157,6 @@ body {
 	font-weight: bold;
 }
 
-/*Estilo para paineis que estejam na area conteudo*/
-.painel-conteudo{
-    background-color: transparent;    
-}
-
-/*Estilo para o menu que esta selecionado*/
-.menu-selecionado{
-    background-color: #B9D584;
-    font-weight: bold;    
-}
-/* Arredondar menu selecionado */
-.topleft{ 
-    font-size: 0;
-    height: 4px;     
-}
-.bottomleft { 
-    font-size: 0;
-    height: 4px;    
-}
-
-/*Estilo para os paineis que exibem erros*/
 .painel-erro{
     background-color: #FEF4F2;
     border: 1px solid red;
@@ -256,7 +178,6 @@ body {
     background-color: #FFD83F;
 }
 
-/* Seam */
 .label {
     font-weight: bold;
 }
